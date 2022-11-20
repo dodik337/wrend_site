@@ -1,6 +1,6 @@
 #taskkill /f /im python.exe
 
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, session, request, url_for, abort
 from forms import LoginForm
 
 from config import Config
@@ -13,25 +13,39 @@ app.config.from_object(Config)
 def hi():  # put application's code here
     return 'sdfsdf!'
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():  # put application's code here
     form = LoginForm()
-    print(form.validate_on_submit())
+    # print(form.validate_on_submit())
     if form.validate_on_submit():
         flash(f"Зашел пользователь под логином {form.username.data}, запомнить = {form.remember_me.data}")
         return redirect('/index')
 
     return render_template('login.html', title='Авторизация пользователя', form=form)
 
-@app.route('/login2')
+users_passwords = { '1':'1', '2':'2', '3':'3', 'admin':'1234' }
+
+@app.route('/login2', methods=['POST', 'GET'])
 def login2():
+    if 'userlogged' in session:
+        return redirect(url_for('profile', username=session['userlogged']))
+    elif request.method == 'POST' and request.form['username'] in users_passwords and request.form['psw'] == users_passwords[request.form['username']]:
+        if users_passwords == 3:
+            return render_template('admin.html')
+        session['userlogged'] = request.form['username']
+        return redirect(url_for('profile', username=session['userlogged']))
 
 
     return render_template('login_2var.html', title='Авторизация пользователя')
 
 
-@app.route('/')
+@app.route('/profile/<username>')
+def profile(username):
+    if 'userlogged' not in session or session['userlogged'] != username:
+        abort(401)
+    elif 'userlogged' and session['userlogged']:
+    #return f"<h1> Пользователь {username}"
+        return render_template('index.html')
 @app.route('/index')
 def index():  # put application's code here
     car = {'name': ('bugatty',
