@@ -2,10 +2,9 @@
 import datetime
 import os.path
 import sqlite3
-
-from flask import Flask, render_template, flash, redirect, session, request, url_for, abort
+from flask import Flask, render_template, flash, redirect, session, request, url_for, abort, g
 from forms import LoginForm
-
+from data import FDataBase
 from config import Config
 
 app = Flask(__name__)
@@ -58,20 +57,30 @@ def profile(username):
     if 'userlogged' not in session or session['userlogged'] != username:
         abort(401)
     elif 'userlogged' and session['userlogged']:
-        # return f"<h1> Пользователь {username}"
-        return render_template('index.html')
-
+        return f"<h1> Пользователь {username}"
+def get_db():
+    if not hasattr(g, 'link_db'):
+        g.link_db = connect_db()
+        return g.link_db
+@app.teardown_appcontext
+def close_db(error):
+    if hasattr(g, 'link_db'):
+        g.link_db.close()
 
 @app.route('/index')
 def index():  # put application's code here
+    db = get_db()
+    base = FDataBase(db)
+
+
     car = {'name': ('bugatty',
 
                     'https://libertycity.ru/uploads/download/gta5_bugatti/fulls/j4q9k776k31rt5p2jnd2823s63/15043684584016_f61541-1.jpg')}
 
-    return render_template('index.html', name=car['name'][0], foto=car['name'][1], title='1')
+    return render_template('index.html', name=car['name'][0], foto=car['name'][1], title='1', menu=base.getMenu())
 
 
-@app.route('/petya/')
+@app.route('/petya')
 def petya():  # put application's code here
     return ''' <h2> Александр Твардовский
 

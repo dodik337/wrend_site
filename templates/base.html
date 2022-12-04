@@ -10,11 +10,15 @@
     {% endif %}
 </head>
 <body>
-<h1>
-    <div> Крутые машины <a href="/index"> Домой</a>
-     <a href="/login"> Авторизация</a>
-    </div>
-</h1>
+{% block content %}
+            {%- block mainmenu -%}
+        <ul>
+            {% for m in menu -%}
+            <li><a href="{{url_for(m.url)}}">{{m.title}}</a></li>
+        {% endfor -%}
+        </ul>
+
+            {% endblock mainmenu -%}
 <hr>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -26,7 +30,6 @@
 </ul>
 {% endif %}
 {% endwith %}
-{% block content %}
 {% endblock %}
 </body>
 </html>

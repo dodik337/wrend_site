@@ -1,7 +1,5 @@
 import sqlite3
 
-from app import app, connect_db
-
 
 def create_db():
     '''Вспомогательная функция для создания таблиц БД'''
@@ -57,9 +55,25 @@ class FDataBase:
             return False
         return True
 
+    def getMenu(self):
+        try:
+            sql = """SELECT * FROM mainmenu"""
+            self.__cur.execute(sql)
+            res = self.__cur.fetchall()
+            if res: return res
+        except:
+            print('Ошибка чтения из БД')
+            return []
+
+
+
 if __name__ == '__main__':
+    from app import app, connect_db
     print(create_db.__doc__)
     db = connect_db()
     db = FDataBase(db)
+    for i in db.getMenu():
+        print(i['url'])
+    print(*db.getMenu())
 
-    print(db.delPost(0))
+    print(db.delMenu(33))
