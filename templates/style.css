@@ -1,0 +1,30 @@
+body {
+    margin-top: 50px;
+    height: 500px;
+    background-image: url(https://sun9-84.userapi.com/impg/FG8w3TVMuy11K5JeTkWVJsIQ3DO2eKfOuUk_lg/FNN1NNyxPak.jpg?size=1170x1163&quality=95&sign=d0f85dd39ae99575b464c43c1c255aeb&type=album);
+    background-size: 1300px;
+    background-position: top;
+}
+
+.main {
+    margin-top: auto;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    width: auto;
+    height: max-content;
+}
+
+#sign {
+    background-color: rgb(164, 164, 164);
+    box-shadow: inset;
+    text-shadow: 50px;
+    font-size: 125px;
+    position: relative;
+    padding-top: 100px;
+    text-align: center;
+}
+
+#info {
+    background-color: white;
+}
